@@ -1,0 +1,36 @@
+# Environment & secrets
+.env
+airflow/.env
+brazil_ecom/profiles.yml
+brazil_ecom/.user.yml
+
+# Virtual environment
+brazil_env/
+
+# Airflow runtime
+airflow/logs/
+airflow/config/
+airflow/plugins/
+
+# Database files
+db/
+duckdb_data/
+*.duckdb
+
+# dbt
+brazil_ecom/target/
+brazil_ecom/dbt_packages/
+brazil_ecom/logs/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+run_dbt.py
+
+# OS
+.DS_Store
+
+# CSV Files
+*.csv

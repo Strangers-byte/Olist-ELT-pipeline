@@ -1,0 +1,120 @@
+models:
+  - name: customers_cleaned
+    description: Cleaned customer data with surrogate key.
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_unique_id
+        tests:
+          - not_null
+  - name: only_customers
+    columns:
+      - name: customer_unique_id
+        tests:
+          - unique
+          - not_null
+
+  - name: orders_cleaned
+    description: Orders with standardized timestamps.
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('customers_cleaned')
+              field: customer_id
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['delivered','shipped','canceled','unavailable','invoiced','processing','created','approved']
+
+  - name: order_items_cleaned
+    description: All items in each order
+    columns:
+      - name: order_id
+        tests:
+            - not_null
+      - name: item_sequence
+        tests:
+            - not_null
+      - name: product_id
+        tests:
+            - not_null
+      - name: seller_id
+        tests:
+            - not_null
+      - name: price
+        tests:
+            - not_null
+      - name: freight_value
+        tests:
+            - not_null
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+            - order_id
+            - item_sequence
+
+  - name: payments_cleaned
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+      - name: sequential
+        tests:
+          - not_null
+      - name: payment_type
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_id
+            - sequential
+
+  - name: reviews_cleaned
+    columns:
+      - name: review_id
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        tests:
+          - not_null
+      - name: score
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1,2,3,4,5]
+
+  - name: products_cleaned
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+      - name: category
+        tests:
+          - not_null
+
+  - name: sellers_cleaned
+    columns:
+      - name: seller_id
+        tests:
+          - unique
+          - not_null
+
+  - name: geolocation_cleaned
+    columns:
+      - name: zip_code_prefix
+        tests:
+          - not_null
+      - name: state
+        tests:
+          - not_null
